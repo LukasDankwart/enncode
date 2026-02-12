@@ -1,0 +1,10 @@
+Log-file from analysing of onnxgurobi/tests/vnncomp/vit/ibp_3_3_8_modified.onnx. 
+ 
+[NODE 0]: /0/Shape
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/vit/subgraphs\node_000__0_Shape.onnx. 
+     [FAILED]: Compatibility is missing. Subgraph has unsupported node type! 
+          Parser for operator 'Shape' is not supported. 
+
+ Note: - Furthermore, the original model contains following unsupported operation types, which are likely to cause further incompatibility: 
+['ReduceMean', 'Slice', 'Transpose', 'Shape', 'ConstantOfShape', 'Gather', 'Softmax']
+ (Please see documentation for currently supported node-operations)

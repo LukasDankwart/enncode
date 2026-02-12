@@ -1,0 +1,10 @@
+Log-file from analysing of onnxgurobi/tests/vnncomp/traffic_signs_recognition/3_30_30_QConv_16_3_QConv_32_2_Dense_43_ep_30_modified.onnx. 
+ 
+[NODE 0]: sequential_10/quant_conv2d_20/QuantConv2D__185
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/traffic_signs_recognition/subgraphs\node_000_sequential_10_quant_conv2d_20_QuantConv2D__185.onnx. 
+     [FAILED]: Compatibility is missing. Subgraph has unsupported node type! 
+          Parser for operator 'Transpose' is not supported. 
+
+ Note: - Furthermore, the original model contains following unsupported operation types, which are likely to cause further incompatibility: 
+['Softmax', 'Sign', 'Transpose']
+ (Please see documentation for currently supported node-operations)

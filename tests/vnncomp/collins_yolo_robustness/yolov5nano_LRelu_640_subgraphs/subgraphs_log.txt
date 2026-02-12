@@ -1,0 +1,4 @@
+Log-file from analysing of onnxgurobi/tests/vnncomp/collins_yolo_robustness/yolov5nano_LRelu_640.onnx. 
+ 
+[NODE 0]: /model.0/conv/Conv
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/collins_yolo_robustness/yolov5nano_LRelu_640_subgraphs/node_000__model.0_conv_Conv.onnx. 

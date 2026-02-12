@@ -1,0 +1,25 @@
+Log-file from analysing of onnxgurobi/tests/vnncomp/dist_shift/mnist_concat_modified.onnx. 
+ 
+[NODE 0]: Gemm_3
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/dist_shift/subgraphs\node_000_Gemm_3.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/dist_shift/subgraphs\node_000_Gemm_3.onnx) has been successful. 
+ 
+[NODE 1]: Relu_4
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/dist_shift/subgraphs\node_001_Relu_4.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/dist_shift/subgraphs\node_001_Relu_4.onnx) has been successful. 
+ 
+[NODE 2]: Gemm_5
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/dist_shift/subgraphs\node_002_Gemm_5.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/dist_shift/subgraphs\node_002_Gemm_5.onnx) has been successful. 
+ 
+[NODE 3]: Sigmoid_6
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/dist_shift/subgraphs\node_003_Sigmoid_6.onnx. 
+     [FAILED]: Compatibility is missing. Subgraph has unsupported node type! 
+          Parser for operator 'Sigmoid' is not supported. 
+
+ Note: - Furthermore, the original model contains following unsupported operation types, which are likely to cause further incompatibility: 
+['Sigmoid']
+ (Please see documentation for currently supported node-operations)

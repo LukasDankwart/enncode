@@ -1,0 +1,45 @@
+Log-file from analysing of onnxgurobi/tests/vnncomp/ml4acopf/118_ieee_ml4acopf_modified.onnx. 
+ 
+[NODE 0]: /layers.0/Gemm
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_000__layers.0_Gemm.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_000__layers.0_Gemm.onnx) has been successful. 
+ 
+[NODE 1]: /layers.1/Relu
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_001__layers.1_Relu.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_001__layers.1_Relu.onnx) has been successful. 
+ 
+[NODE 2]: /layers.2/Gemm
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_002__layers.2_Gemm.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_002__layers.2_Gemm.onnx) has been successful. 
+ 
+[NODE 3]: /layers.3/Relu
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_003__layers.3_Relu.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_003__layers.3_Relu.onnx) has been successful. 
+ 
+[NODE 4]: /layers.4/Gemm
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_004__layers.4_Gemm.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_004__layers.4_Gemm.onnx) has been successful. 
+ 
+[NODE 5]: /layers.5/Relu
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_005__layers.5_Relu.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_005__layers.5_Relu.onnx) has been successful. 
+ 
+[NODE 6]: /layers.6/Gemm
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_006__layers.6_Gemm.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_006__layers.6_Gemm.onnx) has been successful. 
+ 
+[NODE 11]: /layers.7/Slice
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/ml4acopf/subgraphs\node_011__layers.7_Slice.onnx. 
+     [FAILED]: Compatibility is missing. Subgraph has unsupported node type! 
+          Parser for operator 'Slice' is not supported. 
+
+ Note: - Furthermore, the original model contains following unsupported operation types, which are likely to cause further incompatibility: 
+['Expand', 'Cos', 'ConstantOfShape', 'Gather', 'Transpose', 'Where', 'Equal', 'Neg', 'Sin', 'Sigmoid', 'Slice', 'Pow']
+ (Please see documentation for currently supported node-operations)

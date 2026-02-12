@@ -1,0 +1,10 @@
+Log-file from analysing of onnxgurobi/tests/vnncomp/cctsdb_yolo/patch-1_modified.onnx. 
+ 
+[NODE 4]: Slice_4
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/cctsdb_yolo/subgraphs\node_004_Slice_4.onnx. 
+     [FAILED]: Compatibility is missing. Subgraph has unsupported node type! 
+          Parser for operator 'Slice' is not supported. 
+
+ Note: - Furthermore, the original model contains following unsupported operation types, which are likely to cause further incompatibility: 
+['Squeeze', 'Resize', 'ScatterND', 'Gather', 'Clip', 'Slice', 'Expand', 'Shape', 'ArgMax', 'Min', 'ConstantOfShape', 'Transpose', 'Range', 'Cast', 'Equal', 'Max', 'Where']
+ (Please see documentation for currently supported node-operations)

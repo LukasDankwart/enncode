@@ -1,0 +1,60 @@
+Log-file from analysing of onnxgurobi/tests/vnncomp/yolo/TinyYOLO_modified.onnx. 
+ 
+[NODE 0]: Conv_0
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_000_Conv_0.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_000_Conv_0.onnx) has been successful. 
+ 
+[NODE 1]: Conv_1
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_001_Conv_1.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_001_Conv_1.onnx) has been successful. 
+ 
+[NODE 2]: Relu_2
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_002_Relu_2.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_002_Relu_2.onnx) has been successful. 
+ 
+[NODE 3]: Conv_3
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_003_Conv_3.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_003_Conv_3.onnx) has been successful. 
+ 
+[NODE 4]: Add_4
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_004_Add_4.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_004_Add_4.onnx) has been successful. 
+ 
+[NODE 5]: Conv_5
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_005_Conv_5.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_005_Conv_5.onnx) has been successful. 
+ 
+[NODE 6]: Relu_6
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_006_Relu_6.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_006_Relu_6.onnx) has been successful. 
+ 
+[NODE 7]: Conv_7
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_007_Conv_7.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_007_Conv_7.onnx) has been successful. 
+ 
+[NODE 8]: Add_8
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_008_Add_8.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_008_Add_8.onnx) has been successful. 
+ 
+[NODE 9]: Relu_9
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_009_Relu_9.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/yolo/subgraphs\node_009_Relu_9.onnx) has been successful. 
+ 
+[NODE 10]: Pad_10
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/yolo/subgraphs\node_010_Pad_10.onnx. 
+     [FAILED]: Compatibility is missing. Subgraph has unsupported node type! 
+          Parser for operator 'Pad' is not supported. 
+
+ Note: - Furthermore, the original model contains following unsupported operation types, which are likely to cause further incompatibility: 
+['Pad']
+ (Please see documentation for currently supported node-operations)

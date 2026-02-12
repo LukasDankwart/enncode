@@ -1,0 +1,25 @@
+Log-file from analysing of onnxgurobi/tests/vnncomp/cgan/cGAN_imgSz32_nCh_1_modified.onnx. 
+ 
+[NODE 0]: Gemm_0
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/cgan/subgraphs\node_000_Gemm_0.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/cgan/subgraphs\node_000_Gemm_0.onnx) has been successful. 
+ 
+[NODE 2]: Reshape_2
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/cgan/subgraphs\node_002_Reshape_2.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/cgan/subgraphs\node_002_Reshape_2.onnx) has been successful. 
+ 
+[NODE 3]: BatchNormalization_3
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/cgan/subgraphs\node_003_BatchNormalization_3.onnx. 
+     [PASSED]: Compatibility. 
+     [PASSED]: Equivalence check for (onnxgurobi/tests/vnncomp/cgan/subgraphs\node_003_BatchNormalization_3.onnx) has been successful. 
+ 
+[NODE 4]: ConvTranspose_4
+     [PASSED]: Extracting current subgraph was successful, stored at onnxgurobi/tests/vnncomp/cgan/subgraphs\node_004_ConvTranspose_4.onnx. 
+     [FAILED]: Compatibility is missing. Subgraph has unsupported node type! 
+          Parser for operator 'ConvTranspose' is not supported. 
+
+ Note: - Furthermore, the original model contains following unsupported operation types, which are likely to cause further incompatibility: 
+['ConvTranspose']
+ (Please see documentation for currently supported node-operations)

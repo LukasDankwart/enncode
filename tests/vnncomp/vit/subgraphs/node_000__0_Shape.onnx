@@ -1,0 +1,25 @@
+onnx.utils.extract_model:á
++
+input/0/Shape_output_0/0/Shape"ShapeExtracted from {torch_jit}Z)
+input 
+
+
+batch_size
+
+ 
+ b
+/0/Shape_output_0
+
+
+j
+/0/Shape_output_0
+
+
+j)
+input 
+
+
+batch_size
+
+ 
+ B	

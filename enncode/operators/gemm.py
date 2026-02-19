@@ -98,6 +98,11 @@ class GemmOperator(BaseOperator):
             var_input = var_input.T
 
         sum_dim = var_input_shape[-1]
+        # TODO: Problem: acasxu simplified hat nach erster flatten operation falsche shape
+        # TODO: aber diese wird sogar richtig geparsed?
+        # TODO: hier stimmt die Shape bestimmung der eingabe nicht wenn simplified wurde
+
+        # TODO: acasxu ruft 14 MAL GEMM PARSER AUF, OBWOHL nur 7 GEMMS ENTHALTEN! FIX THAT
 
         # Generate all multi-dimensional indices for the input tensor
         output_indices = list(product(*[range(dim) for dim in var_output_shape]))

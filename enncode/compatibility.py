@@ -88,7 +88,7 @@ def solve_gurobi_model(model_path, input_data, input_tensor_name='input', output
     """
     Converts an ONNX model to a Gurobi model, assigns input values, optimizes, and returns the output.
     """
-    converter = gurobiModelBuilder.GurobiModelBuilder(model_path)
+    converter = gurobiModelBuilder.GurobiModelBuilder(model_path, simplification=False)
     converter.build_model()
 
     dummy_input = input_data

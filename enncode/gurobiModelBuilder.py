@@ -3,6 +3,10 @@ from .operators.operator_factory import OperatorFactory
 from .parser import ONNXParser
 from .utils import _generate_indices
 from .compatibility import compatibility_check
+import onnx
+from onnxsim import simplify
+from onnx import version_converter
+import sys
 
 class GurobiModelBuilder:
     """
@@ -20,7 +24,7 @@ class GurobiModelBuilder:
         operator_factory (OperatorFactory): Factory for creating operator instances based on node types.
         variables (dict): A mapping of tensor names to either Gurobi decision variables or constant values.
     """
-    def __init__(self, onnx_model_path: str, compcheck=False, rtol=1e-03, atol=1e-04):
+    def __init__(self, onnx_model_path: str, simplification=True, compcheck=False, rtol=1e-03, atol=1e-04):
         """
         Initializes the ONNXToGurobi converter with the given ONNX model file path.
 
@@ -31,7 +35,12 @@ class GurobiModelBuilder:
             onnx_model_path (str): The file path to the ONNX model to be converted.
         """
         self.model = Model("NeuralNetwork")
-        self.internal_onnx = ONNXParser(onnx_model_path)._parse_model()
+        self.onnx_model_path = onnx_model_path
+
+        if simplification:
+            self.onnx_model_path = self.simplified_variant(onnx_model_path)
+
+        self.internal_onnx = ONNXParser(self.onnx_model_path)._parse_model()
         self.initializers = self.internal_onnx.initializers
         self.nodes = self.internal_onnx.nodes
         self.in_out_tensors_shapes = self.internal_onnx.in_out_tensors_shapes
@@ -39,7 +48,6 @@ class GurobiModelBuilder:
         self.variables = {}
 
         # Parameters for optional compatibilty/equivalence check
-        self.onnx_model_path = onnx_model_path
         self.compcheck = compcheck
         self.rtol = rtol
         self.atol = atol
@@ -141,3 +149,21 @@ class GurobiModelBuilder:
             raise ValueError(f"Output variables couldn't be accessed.")
         return output_vars
 
+    def simplified_variant(self, onnx_path):
+        base_model = onnx.load(onnx_path)
+        input_name = base_model.graph.input[0].name
+        input_shapes = {"input": [1, 1, 1, 5]}
+
+        model_simp, check = simplify(
+            base_model,
+            input_shapes=input_shapes
+        )
+
+        if check:
+            target_opset = 11
+            model_simp_v11 = version_converter.convert_version(model_simp, target_version=target_opset)
+            path_to_simplified = onnx_path.removesuffix('.onnx') + "_simplified.onnx"
+            onnx.save(model_simp_v11, path_to_simplified)
+            return path_to_simplified
+        else:
+            raise RuntimeError(f"Simplification of {onnx_path} couldn't be validated.")

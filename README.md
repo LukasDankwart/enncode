@@ -41,8 +41,7 @@ We highly recommend creating a virtual conda environment and installing the libr
     pip install enncode
 ```
 
-* Probably a known fact, but the Gurobi optimizer needs to be manually 
-installed to the platform and a valid license has to be activated. 
+* Note that the Gurobi Optimizer engine has to be installed separately.
 * As the end of 2025, Gurobi has academic licenses available - at no cost -
 to students, faculty, and staff at accredited degree-granting institutions.
 # Getting Started
@@ -77,10 +76,26 @@ An overview of the class’s methods and attributes:
 
 ```
 class GurobiModelBuilder:
+    def  __init__(self, onnx_model_path, compcheck=False, rtol=1e-03, atol=1e-04):
+        """
+        Expects the path to the desired onnx network.
+        Optional: The compcheck flag can be set to True. This will perform a verification
+        check for correct encoding after build_model was called.
+        """
+
+        # Attributes:
+        self.model               # The Gurobi Model object
+        self.variables           # A dict mapping tensor names to Gurobi variables (or constants)
+        self.in_out_tensors_shapes # Shapes of all input and output tensors
+        self.nodes               # Node definitions parsed from ONNX
+        self.initializers        # Constant tensors extracted from the ONNX graph
+        ...
+
     def build_model(self):
         """
         Constructs the Gurobi model by creating variables and applying operator constraints.
-
+        If compcheck was set to True in the constructor, an verification check for correct
+        encoding is performed. The compatibility check is explained later in this document.
         """
 
     def get_gurobi_model(self):
@@ -91,28 +106,47 @@ class GurobiModelBuilder:
             gurobipy.Model: The constructed Gurobi model reflecting the ONNX graph.
         """
 
-    # Attributes:
-    self.model               # The Gurobi Model object
-    self.variables           # A dict mapping tensor names to Gurobi variables (or constants)
-    self.in_out_tensors_shapes # Shapes of all input and output tensors
-    self.nodes               # Node definitions parsed from ONNX
-    self.initializers        # Constant tensors extracted from the ONNX graph
+    def get_input_vars(self):
+        """
+        Retireves references to the input variables of the Gurobi model.
+
+        Returns:
+            dictionary: With names as keys and references to variables as values.
+        """
+
+    def get_output_varss(self):
+        """
+        Retireves references to the ouput variables of the Gurobi model.
+
+        Returns:
+            dictionary: With names as keys and references to variables as values.
+        """ 
 
 ```
 
 # How to Use
+Following code shows the steps for initialization:
+```
+    path = "path/to/your/onnx/file.onnx"
+    model_builder = GurobiModelBuilder(path)
+    model_builder.build_model()
+    gurobi_model = model_builder.get_gurobi_model()
+    input_vars = model_builder.get_input_vars()
+    output_vars = model_builder.get_outpur_vars()
+```
 
-See [example1.py](./examples/example1.py) for a simple example.
-See [example2.py](./examples/example2.py) or [exampe3.py](./examples/example3.py) for more detailed adversarial examples.
-See [example4.py](./examples/example4.py) for the usage of the model builder, which is described down below.
+For further demonstrations see the notebooks in (./examples/). They cover initilaziton and demonstration on 
+usage examples. 
+
+Some other examples can be found in (./examples/examples/). However, please note that these have not been kept up to date and may not be usable without changes.
 
 ## Compatibility
 To get access to the following compatiblity checks, you need to import them by:
 ```
-from onnx_to_gurobi.compatibility import compatibility_check, get_unsupported_note_types, check_equivalence
+from onnx_to_gurobi.compatibility import compatibility_check, get_unsupported_node_types, check_equivalence
 ```
 
-The compatiblity.py was implemented as an interface for checking GurobiModelBuilder compatibility for an onnx model. 
+The compatiblity.py was implemented as additional functionality for checking GurobiModelBuilder compatibility for an onnx model. 
 There are mainly three methods that can be used to check if an ONNX model can be parsed to a Gurobi model.
 
 1. For a comprehensive review, it is recommended to use the ```compatibility_check``` method. The specified ONNX file can be stored in standard .onnx or compressed .onnx.gz format and can be checked as follows:
@@ -147,7 +181,7 @@ restoring the ONNX model as '*_modified.onnx' in the directory of onnx path. If 
 Via the logfile the node causing misconduct can be found and its most likely reason for incompatibility.
 Notes:
 * If extracting current subgraph fails, there might be an error using 'onnx.utils.extract_model' being independent of GurobiModelBuilder.
-* It was observed that equivalence check might fail because Gurobi doesn't find a valid solution (status code -3). 
+* It was observed that equivalence check might fail because Gurobi doesn't find a valid solution (status code -3). Increasing the tolerance via rtol/atol might help.  
 A restart can sometimes still show equivalence before using the following function.
 
 2. For a quick check, if all nodes included in the onnx model are supported by onnx to gurobi, the ```get_unsupported_note_types``` 

@@ -451,7 +451,6 @@ def compatibility_check(onnx_path, iterative_analysis=True, output_dir=None, sav
         print(f"It has shown equivalence for rtol={rtol} and atol={atol}.")
         print(f"ONNX-output: {onnx_output}")
         print(f"Gurobi-output: {gurobi_output}")
-        sys.exit(0)
     else:
         print("\n Given network has been compatible with GurobiModelBuilder parsing. \n")
         print(f"Unfortunately there is a deviation between ONNX and Gurobi output for rtol={rtol} and atol={atol}.")

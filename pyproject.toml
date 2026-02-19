@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "enncode"
-version = "0.1.5"
+version = "0.1.6"
 description = "The enncode is a Python library that creates Gurobi models for neural networks in ONNX format."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -37,4 +37,7 @@ classifiers = [
 ]
 
 [project.urls]
-"Repository" = "https://github.com/Muhammad-Atallah/onnxgurobi"
+"Repository" = "https://github.com/LukasDankwart/enncode"
+
+[tool.setuptools]
+packages = ["enncode"]

@@ -1,7 +1,5 @@
 import torch
-import torchvision
 from torchvision import datasets, transforms
-import matplotlib.pyplot as plt
 
 
 def get_mnist_batch(size, flatten=False):
@@ -31,9 +29,3 @@ def get_mnist_batch(size, flatten=False):
     return images, labels
 
 
-
-if __name__ == "__main__":
-    images, labels = get_mnist_batch(10)
-
-    print(images.shape)
-    print(labels.shape)

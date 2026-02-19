@@ -1,9 +1,11 @@
+# %%
 import numpy as np
-from onnx_to_gurobi.gurobiModelBuilder import GurobiModelBuilder
+from enncode.gurobiModelBuilder import GurobiModelBuilder
 from gurobipy import GRB, quicksum
 from tensorflow.keras.datasets import mnist
 import matplotlib.pyplot as plt
 
+# %%
 # 1) Load MNIST sample, display a sample image and its correct label
 dataset = mnist.load_data()
 images, labels = dataset[1]
@@ -16,16 +18,19 @@ plt.title(f"Original Image | True label: {label}")
 plt.axis("off")
 plt.show()
 
+# %%
 # 2) Define a slight perturbation of an input image
 eps = 0.3 # Each pixel is allowed to be changed by the value epsilon.
 delta = 0.01 # A small margin delta to enforce misclassification
 M = 1e5 # Big-M (large constant)
 
+# %%
 # 3) Convert the ONNX model to a Gurobi model
-model_builder = GurobiModelBuilder("./onnxgurobi/examples/mnist_classifier.onnx")
+model_builder = GurobiModelBuilder("data/mnist_classifier.onnx")
 model_builder.build_model()
 gurobi_model = model_builder.get_gurobi_model()
 
+# %%
 # 4) Provide input data with defined perturbation
 input_vars = model_builder.variables.get("input")
 if input_vars is None:
@@ -44,6 +49,7 @@ for idx, var in input_vars.items():
     gurobi_model.addConstr(var >= lb, name=f"input_lb_{idx}")
     gurobi_model.addConstr(var <= ub, name=f"input_ub_{idx}")
 
+# %%
 # 5) Add misclassification constraint
 output_vars = model_builder.variables.get("output")
 binary_vars = {}
@@ -68,11 +74,14 @@ gurobi_model.addConstr(
     name="missclassification_constr"
     )
 
+# %%
 # 6) Optimize the model
 gurobi_model.optimize()
 if gurobi_model.status != GRB.OPTIMAL:
     raise ValueError(f"Model could not be optimized. Status: {gurobi_model.status}")
 
+
+# %%
 # 7) Retrieve outputs and display results
 output_shape = model_builder.in_out_tensors_shapes["output"]
 model_output = np.zeros((1,) + tuple(output_shape), dtype=np.float32)

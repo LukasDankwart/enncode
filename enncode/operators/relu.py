@@ -34,12 +34,8 @@ class ReLUOperator(BaseOperator):
         """
         Applies the Gurobi constraints to encode the ReLU operation.
 
-        This method encodes the piecewise linear ReLU function using teh following constraints:
-            - Output >= Input
-            - Output >= 0
-            - Output <= upper_bound
-            - Output <= Input + upper_bound * (1 - binary_var)
-            - Output <= upper_bound * binary_var
+        For encoding, the Gurobi specific "addGenContrMax" function is used. Please see
+        Documentation of Gurobi Machine Learning for more details.
 
         Args:
             gurobi_model (gurobipy.Model): The Gurobi model to which constraints should be added.
@@ -52,10 +48,6 @@ class ReLUOperator(BaseOperator):
         var_input = variables[self.input]
         var_output = variables[self.output]
         var_output_shape = self.output_shape
-        """
-        binary_var = variables.get(f"relu_binary_{self.output}")
-        upper_bound = 1e5
-        """
 
         if var_input is None:
             raise ValueError(
@@ -67,13 +59,6 @@ class ReLUOperator(BaseOperator):
                 f"Error in {_node_to_string(self.node)}:"
                 f"Variable for input '{self.output}' not found."
             )
-        """
-        if binary_var is None:
-            raise ValueError(
-                f"Error in {_node_to_string(self.node)}:"
-                f"No binary variable found for ReLU activation"
-            )
-        """
         gurobi_model.update()
 
         output_indices = list(product(*[range(dim) for dim in var_output_shape]))
@@ -87,19 +72,3 @@ class ReLUOperator(BaseOperator):
                 constant=0.0,
                 name=constraint_name
             )
-            """
-            # Y >= X
-            gurobi_model.addConstr(var_output[idx] >= var_input[idx], name=f"{constraint_name}_ge_x")
-
-            # Y >= 0
-            gurobi_model.addConstr(var_output[idx] >= 0, name=f"{constraint_name}_ge_0")
-
-            #Y <= upper bound
-            gurobi_model.addConstr(var_output[idx] <= upper_bound, name=f"{constraint_name}_le_upper_bound")
-
-            #Y <= X + upper bound * (1 − binary variable)
-            gurobi_model.addConstr(var_output[idx] <= var_input[idx] + upper_bound * (1 - binary_var[idx]), name=f"{constraint_name}_le_x_plus_upper_bound")
-
-            # Y <= upper bound * binary variable
-            gurobi_model.addConstr(var_output[idx] <= upper_bound * binary_var[idx], name=f"{constraint_name}_le_upper_bound_binary")
-            """

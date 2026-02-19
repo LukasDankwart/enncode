@@ -2,6 +2,7 @@ from gurobipy import Model, GRB
 from .operators.operator_factory import OperatorFactory
 from .parser import ONNXParser
 from .utils import _generate_indices
+from .compatibility import compatibility_check
 
 class GurobiModelBuilder:
     """
@@ -19,7 +20,7 @@ class GurobiModelBuilder:
         operator_factory (OperatorFactory): Factory for creating operator instances based on node types.
         variables (dict): A mapping of tensor names to either Gurobi decision variables or constant values.
     """
-    def __init__(self, onnx_model_path: str):
+    def __init__(self, onnx_model_path: str, compcheck=False, rtol=1e-03, atol=1e-04):
         """
         Initializes the ONNXToGurobi converter with the given ONNX model file path.
 
@@ -36,6 +37,13 @@ class GurobiModelBuilder:
         self.in_out_tensors_shapes = self.internal_onnx.in_out_tensors_shapes
         self.operator_factory = OperatorFactory()
         self.variables = {}
+
+        # Parameters for optional compatibilty/equivalence check
+        self.onnx_model_path = onnx_model_path
+        self.compcheck = compcheck
+        self.rtol = rtol
+        self.atol = atol
+
 
     def create_variables(self):
         """
@@ -66,24 +74,7 @@ class GurobiModelBuilder:
             elif node['type'] == "Relu":
                 shape = node['output'][0]['shape']
                 indices = _generate_indices(shape)
-                """
-                var_input = self.variables[node["input"][0]["name"]]
 
-                # Create binary variables for ReLU indicator
-                self.variables[f"relu_binary_{output_name}"] = self.model.addVars(
-                    var_input.keys(),
-                    vtype=GRB.BINARY,
-                    name=f"relu_binary_{output_name}"
-                )
-
-                # Create output variables
-                self.variables[output_name] = self.model.addVars(
-                    indices,
-                    vtype=GRB.CONTINUOUS,
-                    lb=-GRB.INFINITY,
-                    name=output_name
-                )
-                """
                 self.variables[output_name] = self.model.addVars(
                     indices,
                     vtype=GRB.CONTINUOUS,
@@ -111,6 +102,17 @@ class GurobiModelBuilder:
             if node['type'] != "Constant":
                 operator = self.operator_factory.create_operator(node, self.initializers)
                 operator.apply_constraints(self.model, self.variables)
+        
+        if self.compcheck:
+            compatibility_check(
+                self.onnx_model_path,
+                iterative_analysis=False,
+                output_dir=None,
+                save_subgraphs=False,
+                rtol=self.rtol,
+                atol=self.atol
+            )
+
 
     def get_gurobi_model(self):
         """

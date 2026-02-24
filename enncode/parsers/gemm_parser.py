@@ -30,13 +30,16 @@ class GemmParser(BaseParser):
         """
         shape_weights = list(parser.initializer_shapes.get(node.input[1], [1]))
         shape_bias = list(parser.initializer_shapes.get(node.input[2], [1]))
-        # TODO: Problem: acasxu simplified hat nach erster flatten operation falsche shape
-        # TODO: aber diese wird sogar richtig geparsed?
-        # Bei simplified netz: shape_weights [5, 50], shape_bias [50] ---> es wird 50 als Input gewählt aber sind nur 5
-        # Beim original acasxu: hat kein Gemm
-        # Beim example4.onnx (nicht simplified + batch dim): shape_weights [16, 32] , shape_bias [16]
-        # Beim example4.onnx (simplified + ohne batch dim): shape_weights [16, 32] , shape_bias [16]
-        shape_input = [shape_weights[1]]
+
+        #shape_input = [shape_weights[1]]
+        shape_input = parser.intermediate_tensors_shapes.get(node.input[0])
+        if shape_input is None:
+            if node.input[0] in parser.input_output_tensors_shapes.keys():
+                shape_input = parser.input_output_tensors_shapes.get(node.input[0])
+            else:
+                raise RuntimeError(f"Input shape for node {node.input[0].name} could not be \
+                parsed by either parsers input or intermediate shapes.")
+
         shape_output = [shape_bias[0]]
         parser.current_shape = shape_output.copy()
 

@@ -5,7 +5,7 @@ import onnx
 from gurobipy import GRB
 from vnnlib.compat import read_vnnlib_simple
 
-from onnx_to_gurobi.gurobiModelBuilder import GurobiModelBuilder
+from enncode.gurobiModelBuilder import GurobiModelBuilder
 
 def run_onnx_model(model_path, input_data, input_tensor_name='input', output_tensor_name='output'):
     """

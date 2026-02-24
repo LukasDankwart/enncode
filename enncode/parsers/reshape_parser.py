@@ -42,7 +42,12 @@ class ReshapeParser(BaseParser):
         parser.current_shape = current_shape
 
         shape_input = parser.current_shape.copy()
-        new_shape = list(parser.constant_values.get(node.input[1]))[1:]
+        if node.input[1] in parser.constant_values:
+            new_shape = list(parser.constant_values.get(node.input[1]))[1:]
+        elif node.input[1] in parser.initializer_values:
+            new_shape = list(parser.initializer_values.get(node.input[1]))[1:]
+        else:
+            raise RuntimeError(f"Target shape of reshape operation in node {node.name} couldn't be extracted.")
 
         if -1 in new_shape:
             pos = new_shape.index(-1)

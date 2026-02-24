@@ -147,6 +147,11 @@ def solve_gurobi_model(model_path, input_data, input_tensor_name='input', output
             raise ValueError(f"Something went wrong handling the batch-dimension expansion.")
         gurobi_outputs = np.reshape(gurobi_outputs, gurobi_outputs.shape[1:])
 
+    # While solving the Gurobi model, the GurobiModelBuilder creates a redundant onnx file, which can then be removed
+    path_to_delete = converter.onnx_model_path
+    if os.path.isfile(path_to_delete):
+        os.remove(path_to_delete)
+
     return gurobi_outputs
 
 def get_unsupported_node_types(onnx_path):
@@ -403,7 +408,7 @@ def compatibility_check(onnx_path, iterative_analysis=True, output_dir=None, sav
     # Then we ensure that first dimension is always a dynamic batch dimension
     add_dynamic_batch_dim(onnx_model)
     # onnx_model = shape_inference.infer_shapes(onnx_model)
-    path = path.removesuffix(".onnx") + "_modified.onnx"
+    path = path.removesuffix(".onnx") + "_compcheck.onnx"
     onnx.save(onnx_model, path)
 
     # 2) For given network, input and output names has to be filtered

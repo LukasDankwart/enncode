@@ -6,15 +6,19 @@ from enncode.compatibility import compatibility_check
 if __name__ == "__main__":
 
 
-    #path = "tests/vnncomp/acasxu/ACASXU_run2a_1_1_batch_2000.onnx"
 
-    path = "tests/models/example4.onnx"
+    path = "tests/networks/concrete/classifier_medium.onnx"
 
 
-    model_builder = GurobiModelBuilder(path, simplification=True)
+    model_builder = GurobiModelBuilder(path, simplification=True, compcheck=True)
     model_builder.build_model()
     print(model_builder.onnx_model_path)
-    #compatibility_check(model_builder.onnx_model_path, iterative_analysis=False)
+
+    #path = "tests/models/example4_simplified.onnx"
+    #compatibility_check(path.removesuffix(".onnx") + "_simplified.onnx", iterative_analysis=False)
+
+
+
     """
 
     model = onnx.load(path)

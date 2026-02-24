@@ -24,7 +24,7 @@ class GurobiModelBuilder:
         operator_factory (OperatorFactory): Factory for creating operator instances based on node types.
         variables (dict): A mapping of tensor names to either Gurobi decision variables or constant values.
     """
-    def __init__(self, onnx_model_path: str, simplification=True, compcheck=False, rtol=1e-03, atol=1e-04):
+    def __init__(self, onnx_model_path: str, simplification=True, compcheck=False, rtol=1e-03, atol=1e-03):
         """
         Initializes the ONNXToGurobi converter with the given ONNX model file path.
 
@@ -37,8 +37,12 @@ class GurobiModelBuilder:
         self.model = Model("NeuralNetwork")
         self.onnx_model_path = onnx_model_path
 
+        # Use the simplified version by onnxsim for the given network
         if simplification:
-            self.onnx_model_path = self.simplified_variant(onnx_model_path)
+            self.onnx_model_path = self.simplified_variant(self.onnx_model_path)
+
+        # Ensure dynamic batch_dim and reexport as dynamic version
+        self.onnx_model_path = self.add_dynamic_batch_dim(self.onnx_model_path, dynamic_name="batch_size")
 
         self.internal_onnx = ONNXParser(self.onnx_model_path)._parse_model()
         self.initializers = self.internal_onnx.initializers
@@ -121,7 +125,6 @@ class GurobiModelBuilder:
                 atol=self.atol
             )
 
-
     def get_gurobi_model(self):
         """
         Retrieves the Gurobi model after all constraints have been added.
@@ -151,19 +154,31 @@ class GurobiModelBuilder:
 
     def simplified_variant(self, onnx_path):
         base_model = onnx.load(onnx_path)
-        input_name = base_model.graph.input[0].name
-        input_shapes = {"input": [1, 1, 1, 5]}
-
+        # With dynamic shapes
         model_simp, check = simplify(
             base_model,
-            input_shapes=input_shapes
+            dynamic_input_shape=True
         )
 
         if check:
-            target_opset = 11
-            model_simp_v11 = version_converter.convert_version(model_simp, target_version=target_opset)
             path_to_simplified = onnx_path.removesuffix('.onnx') + "_simplified.onnx"
-            onnx.save(model_simp_v11, path_to_simplified)
+            onnx.save(model_simp, path_to_simplified)
             return path_to_simplified
         else:
             raise RuntimeError(f"Simplification of {onnx_path} couldn't be validated.")
+
+    def add_dynamic_batch_dim(self, onnx_path, dynamic_name="batch_size"):
+        base_model = onnx.load(onnx_path)
+        # Ensuring the first dimension is a dynamic dimension "batch_size"
+        graph = base_model.graph
+        for input_tensor in graph.input:
+            dims = input_tensor.type.tensor_type.shape.dim
+            if len(dims) > 1:
+                dims[0].dim_param = dynamic_name
+        for output_tensor in graph.output:
+            dims = output_tensor.type.tensor_type.shape.dim
+            if len(dims) > 1:
+                dims[0].dim_param = dynamic_name
+        new_path = onnx_path.removesuffix('.onnx') + "_dynamic.onnx"
+        onnx.save(base_model, new_path)
+        return new_path

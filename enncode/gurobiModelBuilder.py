@@ -22,7 +22,7 @@ class GurobiModelBuilder:
         operator_factory (OperatorFactory): Factory for creating operator instances based on node types.
         variables (dict): A mapping of tensor names to either Gurobi decision variables or constant values.
     """
-    def __init__(self, onnx_model_path: str, simplification=True, compcheck=False, rtol=1e-03, atol=1e-03):
+    def __init__(self, onnx_model_path: str, simplification=False, compcheck=False, rtol=1e-03, atol=1e-03):
         """
         Initializes the ONNXToGurobi converter with the given ONNX model file path.
 

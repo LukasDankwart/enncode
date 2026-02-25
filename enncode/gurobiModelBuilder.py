@@ -5,8 +5,6 @@ from .utils import _generate_indices
 from .compatibility import compatibility_check
 import onnx
 from onnxsim import simplify
-from onnx import version_converter
-import sys
 
 class GurobiModelBuilder:
     """
@@ -107,6 +105,7 @@ class GurobiModelBuilder:
     def build_model(self):
         """
         Constructs the Gurobi model by creating variables and applying operator constraints.
+        Does perform a compatibility check afterward, if the flag was set to True.
 
         """
         self.create_variables()
@@ -135,6 +134,10 @@ class GurobiModelBuilder:
         return self.model
 
     def get_input_vars(self):
+        """
+        Returns:
+            dict: Dictionary with references to the GurobiModel input variables.
+        """
         if len(self.internal_onnx.input_node_name) != 1:
             raise ValueError(f"The current model seems to have more than one input node, which isn't supported by this function.")
         input_name = self.internal_onnx.input_node_name[0]
@@ -144,6 +147,10 @@ class GurobiModelBuilder:
         return input_vars
 
     def get_output_vars(self):
+        """
+        Returns:
+            dict: Dictionary with references to the GurobiModel output variables.
+        """
         if len(self.internal_onnx.output_node_name) != 1:
             raise ValueError(f"The current model seems to have more than one output node, which isn't supported by this function.")
         output_name = self.internal_onnx.output_node_name[0]
@@ -153,32 +160,54 @@ class GurobiModelBuilder:
         return output_vars
 
     def simplified_variant(self, onnx_path):
+        """
+        Simplifies the given onnx model with onnxsim. If successful, the simplified model is saved and
+        the path is returned. If simplification fails, a RunTimeError is raised.
+
+        Returns:
+            path (string): Path to the simplified onnx model.
+        """
         base_model = onnx.load(onnx_path)
+        print(f"\n ONNX input model has {len(base_model.graph.node)} nodes ({onnx_path}).")
         # With dynamic shapes
-        model_simp, check = simplify(
-            base_model,
-            dynamic_input_shape=True
-        )
+        model_simp, check = simplify(base_model)
 
         if check:
             path_to_simplified = onnx_path.removesuffix('.onnx') + "_simplified.onnx"
+            print(f"ONNX model was simplified to {len(model_simp.graph.node)} nodes ({path_to_simplified}).")
             onnx.save(model_simp, path_to_simplified)
             return path_to_simplified
         else:
             raise RuntimeError(f"Simplification of {onnx_path} couldn't be validated.")
 
     def add_dynamic_batch_dim(self, onnx_path, dynamic_name="batch_size"):
+        """
+        Ensures the given onnx model has a dynamic batch dimension in the input and output shapes.
+        But only if the input shape hase more than one dimension.
+
+        Returns:
+            path (string): Path to the onnx model with dynamic batch dimension.
+        """
         base_model = onnx.load(onnx_path)
         # Ensuring the first dimension is a dynamic dimension "batch_size"
         graph = base_model.graph
+        dynamic_change = False
         for input_tensor in graph.input:
             dims = input_tensor.type.tensor_type.shape.dim
             if len(dims) > 1:
+                dynamic_change = True
                 dims[0].dim_param = dynamic_name
         for output_tensor in graph.output:
             dims = output_tensor.type.tensor_type.shape.dim
             if len(dims) > 1:
+                dynamic_change = True
                 dims[0].dim_param = dynamic_name
-        new_path = onnx_path.removesuffix('.onnx') + "_dynamic.onnx"
-        onnx.save(base_model, new_path)
-        return new_path
+
+        if dynamic_change:
+            new_path = onnx_path.removesuffix('.onnx') + "_dynamic.onnx"
+            onnx.save(base_model, new_path)
+            print(f"Final ONNX model with dyn. batch dimension was stored ({new_path}).\n")
+            return new_path
+        else:
+            print(f"ONNX model has only one input dimension: no dynamic batch dimension was added.\n")
+            return onnx_path

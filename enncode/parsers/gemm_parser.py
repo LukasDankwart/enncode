@@ -31,7 +31,6 @@ class GemmParser(BaseParser):
         shape_weights = list(parser.initializer_shapes.get(node.input[1], [1]))
         shape_bias = list(parser.initializer_shapes.get(node.input[2], [1]))
 
-        #shape_input = [shape_weights[1]]
         shape_input = parser.intermediate_tensors_shapes.get(node.input[0])
         if shape_input is None:
             if node.input[0] in parser.input_output_tensors_shapes.keys():

@@ -1,5 +1,4 @@
 import onnx
-import numpy as np
 from .parsers.parser_factory import ParserFactory
 from .internalOnnx import InternalONNXRepresentation
 

@@ -6,4 +6,6 @@ torch>=2.5.1
 pytest>=8.3.5
 tensorflow>=2.19.0
 matplotlib>=3.10.1
+vnnlib>=0.0.1
 gurobipy>=12.0.3
+onnxsim>=0.4.36

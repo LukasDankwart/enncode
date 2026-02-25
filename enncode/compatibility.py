@@ -424,7 +424,8 @@ def compatibility_check(onnx_path, iterative_analysis=True, output_dir=None, sav
 
     # 3) Basic compatibility check by random input
     dummy_input = np.random.rand(*input_shape).astype(np.float32)
-    onnx_output = run_onnx_model(path, dummy_input, input_tensor_name=real_inputs[0])[0]
+    onnx_output = run_onnx_model(path, dummy_input, input_tensor_name=real_inputs[0])
+    onnx_output = onnx_output[0] if len(onnx_output.shape) > 1 else onnx_output
     try:
         gurobi_output = solve_gurobi_model(
             path,
